@@ -17,8 +17,10 @@ ENV PIP_TRUSTED_HOST=${PIP_TRUSTED_HOST}
 COPY requirements.txt .
 RUN python -m pip install --no-cache-dir --upgrade pip \
     && python -m pip install --no-cache-dir --retries 20 --timeout 180 -r requirements.txt \
+    && python -m pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu torch==2.4.1 torchvision==0.19.1 \
     || (echo "Primary index failed, retrying with default PyPI URL" \
-    && PIP_INDEX_URL=https://pypi.org/simple python -m pip install --no-cache-dir --retries 20 --timeout 180 -r requirements.txt)
+    && PIP_INDEX_URL=https://pypi.org/simple python -m pip install --no-cache-dir --retries 20 --timeout 180 -r requirements.txt \
+    && python -m pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu torch==2.4.1 torchvision==0.19.1)
 
 COPY app.py .
 
